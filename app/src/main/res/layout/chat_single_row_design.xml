@@ -42,6 +42,17 @@
             android:layout_height="81dp"
             android:background="@drawable/circular"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="2dp"
+            android:text="16:05"
+            android:textColor="#939ca3" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
