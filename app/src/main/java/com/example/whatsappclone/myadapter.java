@@ -1,5 +1,6 @@
 package com.example.whatsappclone;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,13 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     @Override
     public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_single_row_design,parent,false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), ChatScreenActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
         return new myviewholder(view);
     }
 
