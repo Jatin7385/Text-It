@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatsappClone">
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".ProfileSetUpActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".VerifyotpActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SplashScreenActivity">

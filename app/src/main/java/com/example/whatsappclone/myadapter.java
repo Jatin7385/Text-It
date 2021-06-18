@@ -1,5 +1,6 @@
 package com.example.whatsappclone;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     ArrayList<datamodel> dataholder;
-
+    Context context;
     public myadapter(ArrayList<datamodel> dataholder) {
         this.dataholder = dataholder;
     }
@@ -35,9 +40,11 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
 
     @Override
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
-        holder.img.setImageResource(dataholder.get(position).getImage());
-        holder.header.setText(dataholder.get(position).getHeader());
-        holder.desc.setText(dataholder.get(position).getDesc());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Picasso.with(context).load(user.getPhotoUrl()).into(holder.img);
+        //holder.img.setImageResource(dataholder.get(position).getImage());
+        holder.header.setText(user.getDisplayName());
+        //holder.desc.setText(dataholder.get(position).getDesc());
     }
 
     @Override
@@ -54,6 +61,7 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             img = itemView.findViewById(R.id.image);
             header = itemView.findViewById(R.id.header);
             desc = itemView.findViewById(R.id.desc);
+            context = itemView.getContext();
         }
     }
 }

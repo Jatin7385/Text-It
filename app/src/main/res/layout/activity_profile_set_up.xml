@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileSetUpActivity"
+    android:background="#101d25">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="#00FF00"
+        android:textSize="30dp"
+        android:text="Profile Page"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/profilename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/next_button_profile"
+        android:layout_below="@+id/profilepic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="84dp"
+        android:layout_marginBottom="344dp"
+        android:background="#232d36"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="Profile Name"
+        android:inputType="textPersonName"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="278dp" />
+
+    <ImageView
+        android:id="@+id/profilepic"
+        android:layout_width="133dp"
+        android:layout_height="141dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="131dp"
+        android:layout_below="@+id/title"
+        android:layout_marginTop="30dp"
+        android:clickable="true"
+        android:src="@drawable/profilepicc"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="50dp" />
+
+    <Button
+        android:id="@+id/next_button_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="158dp"
+        android:layout_marginBottom="38dp"
+        android:backgroundTint="#00FF00"
+        android:padding="10dp"
+        android:text="Submit"
+        android:textColor="@color/black" />
+
+</RelativeLayout>

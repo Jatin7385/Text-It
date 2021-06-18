@@ -139,7 +139,7 @@ public class VerifyotpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // if the code is correct and the task is successful
                             // we are sending our user to new activity.
-                            Intent i = new Intent(VerifyotpActivity.this, MainActivity.class);
+                            Intent i = new Intent(VerifyotpActivity.this, ProfileSetUpActivity.class);
                             startActivity(i);
                             finish();
                         } else {
