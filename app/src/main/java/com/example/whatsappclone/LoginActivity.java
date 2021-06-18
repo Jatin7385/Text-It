@@ -26,15 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private CountryCodePicker ccp;
     private String full_number;
     private String number;
-    private static final String TAG = "PhoneAuthActivity";
-
-    // [START declare_auth]
-    private FirebaseAuth mAuth;
-    // [END declare_auth]
-
-    private String mVerificationId;
-    private PhoneAuthProvider.ForceResendingToken mResendToken;
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         ccp = findViewById(R.id.ccp);
         phoneNumber = findViewById(R.id.phoneNumber);
         next = findViewById(R.id.next_button);
-
-        mAuth = FirebaseAuth.getInstance();
-
         final String[] phnum = {null};
 
         next.setOnClickListener(new View.OnClickListener() {
@@ -55,9 +43,12 @@ public class LoginActivity extends AppCompatActivity {
                 phnum[0] = phoneNumber.getText().toString().trim();
                 if(!phnum[0].isEmpty()) {
                     if(phnum[0].length() == 10) {
-                        full_number = "+" + ccp.getFullNumber()+"-" + phnum[0];
+                        full_number = "+" + ccp.getSelectedCountryCode()+"-" + phnum[0];
                         number = phnum[0];
                         Intent otp = new Intent(LoginActivity.this, VerifyotpActivity.class);
+                        System.out.println(full_number);
+                        System.out.println(number);
+                        System.out.println(full_number.substring(0,3));
                         otp.putExtra("full number", full_number);
                         otp.putExtra("number",number);
                         startActivity(otp);

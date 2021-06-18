@@ -80,24 +80,33 @@ public class VerifyotpActivity extends AppCompatActivity {
                     @Override
                     public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                         super.onCodeSent(verificationId, forceResendingToken);
-                        Toast.makeText(VerifyotpActivity.this, "OTP has been sent", Toast.LENGTH_SHORT);
+                        try {
+                            Toast.makeText(VerifyotpActivity.this, "OTP has been sent", Toast.LENGTH_SHORT);
 
-                        next.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                numberOtpMove();
-                                if (!num1.getText().toString().isEmpty() && !num2.getText().toString().isEmpty() && !num3.getText().toString().isEmpty() && !num4.getText().toString().isEmpty() && !num5.getText().toString().isEmpty() && !num6.getText().toString().isEmpty()) {
-                                    otp = num1.getText().toString() + num2.getText().toString() + num3.getText().toString() + num4.getText().toString() + num5.getText().toString() + num6.getText().toString();
-                                } else {
-                                    Toast.makeText(VerifyotpActivity.this, "Please fill all the boxes", Toast.LENGTH_SHORT).show();
+                            next.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    numberOtpMove();
+                                    if (!num1.getText().toString().isEmpty() && !num2.getText().toString().isEmpty() && !num3.getText().toString().isEmpty() && !num4.getText().toString().isEmpty() && !num5.getText().toString().isEmpty() && !num6.getText().toString().isEmpty()) {
+                                        otp = num1.getText().toString() + num2.getText().toString() + num3.getText().toString() + num4.getText().toString() + num5.getText().toString() + num6.getText().toString();
+                                    } else {
+                                        Toast.makeText(VerifyotpActivity.this, "Please fill all the boxes", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
+                            });
+
+                            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, otp);
+
+                            if (!otp.isEmpty()) {
+                                signInUser(credential);
+                            } else {
+                                return;
                             }
-                        });
-
-                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId,otp);
-
-                       if(!otp.isEmpty()){signInUser(credential);}
-                       else{return;}
+                        }catch (Exception e)
+                        {
+                            Toast.makeText(VerifyotpActivity.this,"Verification Code is wrong : "+e.toString(),Toast.LENGTH_SHORT).show();
+                            System.out.println("Error : "+e.getLocalizedMessage().toString());
+                        }
 
                     }
 
