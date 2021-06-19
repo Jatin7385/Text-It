@@ -1,19 +1,19 @@
 package com.example.whatsappclone;
 
 public class UsersModel {
-    String name,uri,number,country_code,id;
+    String name,imageURL,number,country_code,id;
 
     public UsersModel() {
         this.name = "";
-        this.uri = "";
+        this.imageURL = "";
         this.number = "";
         this.country_code = "";
         this.id = "";
     }
 
-    public UsersModel(String name, String uri, String number, String country_code, String id) {
+    public UsersModel(String name, String imageURL, String number, String country_code, String id) {
         this.name = name;
-        this.uri = uri;
+        this.imageURL = imageURL;
         this.number = number;
         this.country_code = country_code;
         this.id = id;
@@ -27,12 +27,12 @@ public class UsersModel {
         this.name = name;
     }
 
-    public String getUri() {
-        return uri;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public String getNumber() {

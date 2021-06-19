@@ -54,18 +54,12 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
         FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
 
         UsersModel user = userList.get(position);
+        String url = user.getImageURL();
 
-        Uri uri = Uri.parse(user.getUri());
-        Glide.with(context).load(uri).into(holder.img);
-        System.out.println(uri.toString());
-        //Picasso.with(context).load(uri).into(holder.img);
-//        if(uri!=null) {
-//            Picasso.with(context).load(uri).into(holder.img);
-//        }
-//        else
-//            {
-//                Picasso.with(context).load(Uri.parse("app/src/main/res/drawable-v24/profilepicc.png"));
-//            }
+        System.out.println("URL : "+url);
+
+        Picasso.with(context).load(url).into(holder.img);
+
         holder.header.setText(user.getName());
     }
 

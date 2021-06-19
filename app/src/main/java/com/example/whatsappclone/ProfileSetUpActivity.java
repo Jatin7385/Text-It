@@ -15,12 +15,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
@@ -31,17 +35,21 @@ public class ProfileSetUpActivity extends AppCompatActivity {
     private Button next_button;
     private EditText profile_name;
     private CircleImageView profile_pic;
+    FirebaseUser user;
     int SELECT_PICTURE = 200;
     private Uri uri;
-    private String s_uri;
+    private String imageURL = "null";
     private String name;
     private DatabaseReference reference;
     private String number,country_code;
     private String id;
+    private HashMap<String, Object> hashMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_set_up);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         next_button = findViewById(R.id.next_button_profile);
         profile_name = findViewById(R.id.profilename);
@@ -66,7 +74,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
                 if(uri==null) {
                     uri = Uri.parse("app/src/main/res/drawable-v24/profilepicc.png");
                 }
-                updateUserProfile(name, uri);
+                updateUserProfile(name);
                 Intent intent = new Intent(ProfileSetUpActivity.this,MainActivity.class);
                 finish();
                 startActivity(intent);
@@ -74,16 +82,15 @@ public class ProfileSetUpActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUserProfile(String name, Uri uri) {
+    private void updateUserProfile(String name) {
 
         String s_name = name;
-        s_uri = uri.toString();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         id = user.getUid();
-        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap = new HashMap<>();
             hashMap.put("id",id);
             hashMap.put("name", s_name);
-            hashMap.put("uri", s_uri);
+            hashMap.put("imageURL",imageURL);
             hashMap.put("country_code", country_code);
             hashMap.put("number", number);
 
@@ -125,9 +132,30 @@ public class ProfileSetUpActivity extends AppCompatActivity {
             if (requestCode == SELECT_PICTURE) {
                 // Get the url of the image from data
                 uri = data.getData();
-                if (null != uri) {
+                String filepath = "Photos/" + "userprofile" + user.getUid();
+                StorageReference reference = FirebaseStorage.getInstance().getReference(filepath);
+                if (uri != null ) {
                     // update the preview image in the layout
                     profile_pic.setImageURI(uri);
+                    reference.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+
+                            task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    imageURL = uri.toString();
+                                    System.out.println(imageURL);
+//                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+//                                    HashMap<String,Object> hashMap1 = new HashMap<>();
+//                                    hashMap1.put("imageURL",imageUrl);
+//                                    databaseReference.updateChildren(hashMap1);
+                                }
+                            });
+                        }
+                    });
+
                 }
             }
         }
