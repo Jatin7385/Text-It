@@ -1,6 +1,8 @@
 package com.example.whatsappclone;
-
+//UNABLE TO RETRIEVE THE DATA BACK IN THE USERLIST
+//SIZE OF THE USER LIST IS COMING BACK AS 0
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,32 +14,61 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChatsFragment extends Fragment {
     RecyclerView recyclerView;
-    ArrayList<datamodel> dataholder;
+    List<UsersModel> userList;
+    FirebaseUser firebaseUser;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_chats,container,false);
         recyclerView = view.findViewById(R.id.Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        dataholder = new ArrayList<>();
+        userList = new ArrayList<>();
 
-        datamodel obj1 = new datamodel(R.drawable.ic_baseline_camera_alt_24,"Angular","Web Application","10:02");
-        dataholder.add(obj1);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
-        datamodel obj2 = new datamodel(R.drawable.ic_baseline_camera_alt_24,"Angular","Web Application","10:02");
-        dataholder.add(obj2);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userList.clear();
 
-        datamodel obj3 = new datamodel(R.drawable.ic_baseline_camera_alt_24,"Angular","Web Application","10:02");
-        dataholder.add(obj3);
+                for(DataSnapshot snapshot1 : snapshot.getChildren())
+                {
+                    UsersModel users = snapshot1.getValue(UsersModel.class);
 
-        datamodel obj4 = new datamodel(R.drawable.ic_baseline_camera_alt_24,"Angular","Web Application","10:02");
-        dataholder.add(obj4);
+                    firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        recyclerView.setAdapter(new myadapter(dataholder));
+                    if(!users.getId().equals(firebaseUser.getUid()))
+                    {
+                        userList.add(users);
+                    }
+                }
+                for(int i=0;i<userList.size();i++){
+                    System.out.println(userList.get(i));
+                }
+                System.out.println("size : "+userList.size());
+
+                recyclerView.setAdapter(new myadapter(userList));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         return view;
     }
 }

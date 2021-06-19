@@ -140,6 +140,8 @@ public class VerifyotpActivity extends AppCompatActivity {
                             // if the code is correct and the task is successful
                             // we are sending our user to new activity.
                             Intent i = new Intent(VerifyotpActivity.this, ProfileSetUpActivity.class);
+                            i.putExtra("code",country_code);
+                            i.putExtra("number",number);
                             startActivity(i);
                             finish();
                         } else {

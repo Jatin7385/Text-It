@@ -2,6 +2,7 @@ package com.example.whatsappclone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +12,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     ArrayList<datamodel> dataholder;
     Context context;
-    public myadapter(ArrayList<datamodel> dataholder) {
-        this.dataholder = dataholder;
+    List<UsersModel> userList;
+
+    public myadapter(List<UsersModel> userList) {
+        this.userList = userList;
     }
 
     @NonNull
@@ -40,21 +51,32 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
 
     @Override
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Picasso.with(context).load(user.getPhotoUrl()).into(holder.img);
-        //holder.img.setImageResource(dataholder.get(position).getImage());
-        holder.header.setText(user.getDisplayName());
-        //holder.desc.setText(dataholder.get(position).getDesc());
+        FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
+
+        UsersModel user = userList.get(position);
+
+        Uri uri = Uri.parse(user.getUri());
+        Glide.with(context).load(uri).into(holder.img);
+        System.out.println(uri.toString());
+        //Picasso.with(context).load(uri).into(holder.img);
+//        if(uri!=null) {
+//            Picasso.with(context).load(uri).into(holder.img);
+//        }
+//        else
+//            {
+//                Picasso.with(context).load(Uri.parse("app/src/main/res/drawable-v24/profilepicc.png"));
+//            }
+        holder.header.setText(user.getName());
     }
 
     @Override
     public int getItemCount() {
-        return dataholder.size();
+        return userList.size();
     }
 
     class  myviewholder extends RecyclerView.ViewHolder
     {
-        ImageView img;
+        CircleImageView img;
         TextView header,desc,time;
         public myviewholder(@NonNull View itemView) {
             super(itemView);

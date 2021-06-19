@@ -39,11 +39,13 @@
         tools:layout_editor_absoluteX="100dp"
         tools:layout_editor_absoluteY="278dp" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profilepic"
         android:layout_width="133dp"
         android:layout_height="141dp"
         android:layout_alignParentEnd="true"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/white"
         android:layout_marginEnd="131dp"
         android:layout_below="@+id/title"
         android:layout_marginTop="30dp"
@@ -51,7 +53,7 @@
         android:src="@drawable/profilepicc"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="138dp"
-        tools:layout_editor_absoluteY="50dp" />
+        tools:layout_editor_absoluteY="50dp"/>
 
     <Button
         android:id="@+id/next_button_profile"

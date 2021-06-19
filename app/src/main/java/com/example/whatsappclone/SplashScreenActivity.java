@@ -28,10 +28,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                /*if(loginStatus == 1){intent = new Intent(SplashScreenActivity.this,MainActivity.class); }
-                else {*/
+                if(loginStatus == 1){intent = new Intent(SplashScreenActivity.this,MainActivity.class); }
+                else {
                     intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                //}
+                }
                 startActivity(intent);
             }
         }, 3000);
