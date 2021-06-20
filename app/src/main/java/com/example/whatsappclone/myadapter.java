@@ -1,7 +1,9 @@
 package com.example.whatsappclone;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,9 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     ArrayList<datamodel> dataholder;
     Context context;
     List<UsersModel> userList;
+    private UsersModel user;
+    private String url;
+    private String name;
 
     public myadapter(List<UsersModel> userList) {
         this.userList = userList;
@@ -43,6 +48,9 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(view.getContext(), ChatScreenActivity.class);
+                intent.putExtra("url",url);
+                intent.putExtra("name",name);
+                ((Activity)context).finish();
                 view.getContext().startActivity(intent);
             }
         });
@@ -51,15 +59,19 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
 
     @Override
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
-        FirebaseUser users = FirebaseAuth.getInstance().getCurrentUser();
 
-        UsersModel user = userList.get(position);
-        String url = user.getImageURL();
+        user = userList.get(position);
+        url = user.getImageURL();
+        name = user.getName();
 
-        System.out.println("URL : "+url);
-
-        Picasso.with(context).load(url).into(holder.img);
-
+        //System.out.println("URL : "+url);
+        if(url == "null")
+        {
+            holder.img.setImageDrawable(Drawable.createFromPath("app/src/main/res/drawable-v24/profilepicc.png"));
+        }
+        else {
+            Picasso.with(context).load(url).into(holder.img);
+        }
         holder.header.setText(user.getName());
     }
 
