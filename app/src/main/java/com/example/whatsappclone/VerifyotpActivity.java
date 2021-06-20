@@ -56,6 +56,8 @@ public class VerifyotpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verifyotp);
 
+        getSupportActionBar().hide();
+
         // below line is for getting instance
         // of our FirebaseAuth.
         mAuth = FirebaseAuth.getInstance();

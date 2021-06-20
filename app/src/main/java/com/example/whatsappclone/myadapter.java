@@ -50,7 +50,7 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
                 Intent intent = new Intent(view.getContext(), ChatScreenActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("name",name);
-                ((Activity)context).finish();
+                intent.putExtra("friendId",user.getId());
                 view.getContext().startActivity(intent);
             }
         });

@@ -49,6 +49,8 @@ public class ProfileSetUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_set_up);
 
+        getSupportActionBar().hide();
+
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         next_button = findViewById(R.id.next_button_profile);
