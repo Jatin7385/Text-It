@@ -27,15 +27,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
 public class VerifyotpActivity extends AppCompatActivity {
     private EditText num1,num2,num3,num4,num5,num6;
     private Button next;
-    TextView ph_num;
-    String full_number,number;
-    String otp,country_code;
+    private TextView ph_num;
+    private String full_number,number;
+    private String otp,country_code;
+    private boolean hasAccount;
     private static final String TAG = "VerifyotpActivity";
     // variable for FirebaseAuth class
     private FirebaseAuth mAuth;
@@ -67,6 +73,7 @@ public class VerifyotpActivity extends AppCompatActivity {
         full_number = (String) b.get("full number");
         country_code = full_number.substring(0,3);
         number = (String) b.get("number");
+        hasAccount = (boolean) b.get("account");
 
         sendVerificationCode(country_code+number);
 
@@ -141,11 +148,20 @@ public class VerifyotpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // if the code is correct and the task is successful
                             // we are sending our user to new activity.
-                            Intent i = new Intent(VerifyotpActivity.this, ProfileSetUpActivity.class);
-                            i.putExtra("code",country_code);
-                            i.putExtra("number",number);
-                            startActivity(i);
-                            finish();
+
+                            if(hasAccount == true)
+                            {
+                                Intent i = new Intent(VerifyotpActivity.this,MainActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+                            else {
+                                Intent i = new Intent(VerifyotpActivity.this, ProfileSetUpActivity.class);
+                                i.putExtra("code", country_code);
+                                i.putExtra("number", number);
+                                startActivity(i);
+                                finish();
+                            }
                         } else {
                             // if the code is not correct then we are
                             // displaying an error message to the user.
@@ -216,16 +232,6 @@ public class VerifyotpActivity extends AppCompatActivity {
         // calling sign in method.
         signInWithCredential(credential);
     }
-
-    private void updateUI(FirebaseUser user) {
-        Intent intent1 = new Intent(VerifyotpActivity.this, MainActivity.class);
-        startActivity(intent1);
-    }
-
-
-
-
-
 
 
     private void numberOtpMove() {

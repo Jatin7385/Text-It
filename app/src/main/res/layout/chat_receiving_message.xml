@@ -13,8 +13,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:layout_margin="20dp"
-            android:background="#A9A9A9"
+            android:layout_margin="10dp"
+            android:background="#212e36"
             android:textColor="@color/white"/>
 
 

@@ -98,11 +98,11 @@
                 android:textColor="#939ca3"/>
 
             <Button
-                android:id="@+id/calls_button"
+                android:id="@+id/profile_button"
                 android:layout_width="109dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#232d36"
-                android:text="CALLS"
+                android:text="PROFILE"
                 android:textColor="#939ca3"/>
         </LinearLayout>
 

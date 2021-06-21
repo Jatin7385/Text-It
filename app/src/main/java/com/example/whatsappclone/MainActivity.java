@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         chats = (Button)findViewById(R.id.chats_button);
         status = (Button)findViewById(R.id.status_button);
-        calls = (Button)findViewById(R.id.calls_button);
+        calls = (Button)findViewById(R.id.profile_button);
 
         chats.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         calls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedFragment[0] = new CallsFragment();
+                selectedFragment[0] = new ProfileFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         selectedFragment[0]).commit();
             }

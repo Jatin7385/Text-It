@@ -1,6 +1,7 @@
 package com.example.whatsappclone;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
@@ -80,7 +81,17 @@ public class ChatScreenActivity extends AppCompatActivity {
         myId = user.getUid();
 
         textView_name.setText(name);
-        Picasso.with(ChatScreenActivity.this).load(url).into(profilepic);
+
+        if(url.equals("default"))
+        {
+            String uri = "@drawable/profilepicc";
+            int imageResource = getResources().getIdentifier(uri,null,getPackageName());
+            Drawable res = getResources().getDrawable(imageResource);
+            profilepic.setImageDrawable(res);
+        }
+        else {
+            Picasso.with(ChatScreenActivity.this).load(url).into(profilepic);
+        }
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override

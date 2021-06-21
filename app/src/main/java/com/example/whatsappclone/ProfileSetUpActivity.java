@@ -38,7 +38,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
     FirebaseUser user;
     int SELECT_PICTURE = 200;
     private Uri uri;
-    private String imageURL = "null";
+    private String imageURL = "default";
     private String name;
     private DatabaseReference reference;
     private String number,country_code;
@@ -47,6 +47,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_profile_set_up);
 
         getSupportActionBar().hide();
@@ -73,9 +74,6 @@ public class ProfileSetUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 name = profile_name.getText().toString().trim();
-                if(uri==null) {
-                    uri = Uri.parse("app/src/main/res/drawable-v24/profilepicc.png");
-                }
                 updateUserProfile(name);
                 Intent intent = new Intent(ProfileSetUpActivity.this,MainActivity.class);
                 finish();
@@ -148,6 +146,11 @@ public class ProfileSetUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     imageURL = uri.toString();
+                                    if(imageURL == "null")
+                                    {
+                                        Uri urii = Uri.parse("app/src/main/res/drawable-v24/profilepicc.png");
+                                        imageURL = urii.toString();
+                                    }
                                     System.out.println(imageURL);
 //                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
 //                                    HashMap<String,Object> hashMap1 = new HashMap<>();

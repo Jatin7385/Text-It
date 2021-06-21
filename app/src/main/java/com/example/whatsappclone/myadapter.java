@@ -65,9 +65,12 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
         name = user.getName();
 
         //System.out.println("URL : "+url);
-        if(url == "null")
+        if(url.equals("default"))
         {
-            holder.img.setImageDrawable(Drawable.createFromPath("app/src/main/res/drawable-v24/profilepicc.png"));
+            String uri = "@drawable/profilepicc";
+            int imageResource = context.getResources().getIdentifier(uri,null,context.getPackageName());
+            Drawable res = context.getResources().getDrawable(imageResource);
+            holder.img.setImageDrawable(res);
         }
         else {
             Picasso.with(context).load(url).into(holder.img);
