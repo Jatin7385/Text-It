@@ -1,6 +1,4 @@
 package com.example.whatsappclone;
-//UNABLE TO RETRIEVE THE DATA BACK IN THE USERLIST
-//SIZE OF THE USER LIST IS COMING BACK AS 0
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
