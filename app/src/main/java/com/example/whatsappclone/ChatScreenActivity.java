@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -38,13 +39,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
+//ADDED TIME HERE
 public class ChatScreenActivity extends AppCompatActivity {
     private Button back;
     private FloatingActionButton send;
     private EditText text;
     private String message;
-    private String name,url,friendId,myId;
+    private String name,url,friendId,myId,time;
     private TextView textView_name;
     private CircleImageView profilepic;
     private FirebaseUser user;
@@ -60,6 +61,8 @@ public class ChatScreenActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        time = new SimpleDateFormat("HHmm").format(Calendar.getInstance().getTime());
 
         back = findViewById(R.id.back_button);
         send = findViewById(R.id.sendButton);
@@ -174,6 +177,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         hashMap.put("sender",myId);
         hashMap.put("receiver",friendId);
         hashMap.put("message",message);
+        hashMap.put("time",time);
         databaseReference.child("Chats").push().setValue(hashMap);
     }
 }

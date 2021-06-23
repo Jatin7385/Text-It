@@ -62,48 +62,34 @@
         android:layout_marginTop="80dp"
         android:background="#232d36">
 
-        <Button
-            android:id="@+id/camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginEnd="350dp"
-            android:background="@drawable/ic_baseline_camera_alt_24"
-            android:backgroundTint="#232d36"
-            app:backgroundTint="#939ca3" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/chats_button"
-                android:layout_width="109dp"
+                android:layout_width="135dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#232d36"
                 android:text="CHATS"
-                android:textColor="#939ca3"/>
+                android:textColor="#939ca3" />
 
             <Button
                 android:id="@+id/status_button"
-                android:layout_width="109dp"
+                android:layout_width="135dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#232d36"
                 android:text="STATUS"
-                android:textColor="#939ca3"/>
+                android:textColor="#939ca3" />
 
             <Button
                 android:id="@+id/profile_button"
-                android:layout_width="109dp"
+                android:layout_width="143dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#232d36"
                 android:text="PROFILE"
-                android:textColor="#939ca3"/>
+                android:textColor="#939ca3" />
         </LinearLayout>
 
 

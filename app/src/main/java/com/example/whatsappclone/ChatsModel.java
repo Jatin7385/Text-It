@@ -1,12 +1,18 @@
 package com.example.whatsappclone;
 
-public class ChatsModel {
-    String sender,receiver,message;
+//ADDED TIME IN THIS
 
-    public ChatsModel(String sender, String receiver, String message) {
+public class ChatsModel {
+    String sender;
+    String receiver;
+    String message;
+    String time;
+
+    public ChatsModel(String sender, String receiver, String message, String time) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
+        this.time = time;
     }
 
     public ChatsModel()
@@ -36,5 +42,13 @@ public class ChatsModel {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

@@ -20,7 +20,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatsFragment extends Fragment {
@@ -34,6 +37,8 @@ public class ChatsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         userList = new ArrayList<>();
+
+        String time = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -69,4 +74,19 @@ public class ChatsFragment extends Fragment {
 
         return view;
     }
+//
+//    class Sortbytime implements Comparator<UsersModel>
+//    {
+//        // Used for sorting in ascending order of
+//        // roll number
+//        public int compare(Student a, Student b)
+//        {
+//            return a.rollno - b.rollno;
+//        }
+//
+//        @Override
+//        public int compare(UsersModel o1, UsersModel o2) {
+//            return o2.get;
+//        }
+//    }
 }

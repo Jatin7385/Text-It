@@ -245,7 +245,7 @@ public class VerifyotpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().trim().isEmpty())
                 {
-                    num1.requestFocus();
+                    num2.requestFocus();
                 }
             }
 
@@ -265,7 +265,10 @@ public class VerifyotpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().trim().isEmpty())
                 {
-                    num2.requestFocus();
+                    num3.requestFocus();
+                }
+                else {
+                       num1.requestFocus();
                 }
             }
 
@@ -285,8 +288,12 @@ public class VerifyotpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().trim().isEmpty())
                 {
-                    num3.requestFocus();
+                    num4.requestFocus();
                 }
+                else
+                    {
+                        num2.requestFocus();
+                    }
             }
 
             @Override
@@ -305,8 +312,12 @@ public class VerifyotpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().trim().isEmpty())
                 {
-                    num4.requestFocus();
+                    num5.requestFocus();
                 }
+                else
+                    {
+                        num3.requestFocus();
+                    }
             }
 
             @Override
@@ -325,8 +336,29 @@ public class VerifyotpActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!s.toString().trim().isEmpty())
                 {
-                    num5.requestFocus();
+                    num6.requestFocus();
                 }
+                else
+                    {
+                        num4.requestFocus();
+                    }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        num6.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().trim().isEmpty()){num5.requestFocus();}
             }
 
             @Override

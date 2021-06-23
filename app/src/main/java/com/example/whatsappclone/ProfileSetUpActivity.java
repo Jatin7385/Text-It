@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,6 +47,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
     private String number,country_code;
     private String id;
     private HashMap<String, Object> hashMap;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
         next_button = findViewById(R.id.next_button_profile);
         profile_name = findViewById(R.id.profilename);
         profile_pic = findViewById(R.id.profilepic);
+        progressBar = findViewById(R.id.progress_bar);
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
@@ -125,6 +130,10 @@ public class ProfileSetUpActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        progressBar.setVisibility(View.VISIBLE);
+        next_button.setEnabled(false);
+        next_button.getBackground().setAlpha(50);
+
         if (resultCode == RESULT_OK) {
 
             // compare the resultCode with the
@@ -152,10 +161,9 @@ public class ProfileSetUpActivity extends AppCompatActivity {
                                         imageURL = urii.toString();
                                     }
                                     System.out.println(imageURL);
-//                                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
-//                                    HashMap<String,Object> hashMap1 = new HashMap<>();
-//                                    hashMap1.put("imageURL",imageUrl);
-//                                    databaseReference.updateChildren(hashMap1);
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    next_button.setEnabled(true);
+                                    next_button.getBackground().setAlpha(255);
                                 }
                             });
                         }
