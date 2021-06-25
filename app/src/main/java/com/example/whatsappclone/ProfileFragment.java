@@ -48,7 +48,7 @@ public class ProfileFragment extends Fragment {
                 {
 
                     UsersModel users = snapshot1.getValue(UsersModel.class);
-                    if(users.getId() == myId)
+                    if(users.getId() == user.getUid())
                     {
                         System.out.println("Entered");
                         profile_name.setText(users.getName());

@@ -5,12 +5,14 @@ package com.example.whatsappclone;
 public class ChatsModel {
     String sender;
     String receiver;
+    String imageUrl;
     String message;
     String time;
 
-    public ChatsModel(String sender, String receiver, String message, String time) {
+    public ChatsModel(String sender, String receiver, String imageUrl, String message, String time) {
         this.sender = sender;
         this.receiver = receiver;
+        this.imageUrl = imageUrl;
         this.message = message;
         this.time = time;
     }
@@ -34,6 +36,14 @@ public class ChatsModel {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getMessage() {
