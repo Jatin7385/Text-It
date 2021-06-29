@@ -76,9 +76,15 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
         System.out.println(viewtype);
         if(viewtype == 2 || viewtype == 3)
         {
-            Picasso.with(context).load(chats.getImageUrl()).into(holder.imageView);
-            holder.showMessage.setText(chats.getMessage());
-            System.out.println(chats.getImageUrl());
+            try {
+                Picasso.with(context).load(chats.getImageUrl()).into(holder.imageView);
+                holder.showMessage.setText(chats.getMessage());
+                System.out.println(chats.getImageUrl());
+            }
+            catch (Exception e) {
+                System.out.println("ERROR : " + e.getLocalizedMessage());
+                System.out.println(chats.getImageUrl());
+            }
         }
 
         else{

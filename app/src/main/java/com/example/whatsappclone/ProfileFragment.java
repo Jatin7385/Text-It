@@ -48,16 +48,16 @@ public class ProfileFragment extends Fragment {
                 {
 
                     UsersModel users = snapshot1.getValue(UsersModel.class);
-                    if(users.getId() == user.getUid())
+                    assert users != null;
+                    if(users.getId().equals(user.getUid()))
                     {
-                        System.out.println("Entered");
                         profile_name.setText(users.getName());
                         Picasso.with(getContext()).load(users.getImageURL()).into(imageView);
                         break;
                     }
                     else
                         {
-                            System.out.println("NOT GETTING ID");
+                            System.out.print(users.getId() + "-" + user.getUid());
                         }
 
                 }
