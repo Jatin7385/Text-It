@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
                     {
                         profile_name.setText(users.getName());
                         Picasso.with(getContext()).load(users.getImageURL()).into(imageView);
+                        System.out.println(users.getImageURL());
                         break;
                     }
                     else

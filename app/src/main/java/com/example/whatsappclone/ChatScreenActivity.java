@@ -66,6 +66,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private ChatsAdapter adapter;
     private RecyclerView recView;
     private ProgressBar progressBar;
+    private int imageCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -215,6 +216,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
+            final String[] imageUrl = new String[1];
             Button imagePreviewSend;
             ImageView previewImage;
             EditText image_text;
@@ -243,7 +245,8 @@ public class ChatScreenActivity extends AppCompatActivity {
                     //previewImage.setImageURI(selectedImageUri);
                     Picasso.with(ChatScreenActivity.this).load(selectedImageUri.toString()).into(previewImage);
 
-                    String filepath = "Photos/" + "chatImages" + user.getUid();
+                    String filepath = "Photos/" + "chatImages" + user.getUid() + String.valueOf(imageCount);
+                    imageCount++;
                     StorageReference reference = FirebaseStorage.getInstance().getReference(filepath);
                     if (selectedImageUri != null) {
                         // update the preview image in the layout
@@ -255,6 +258,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                                 task.addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        imageUrl[0] = uri.toString();
                                         System.out.println("Photo added in Storage");
                                     }
                                 });
@@ -266,7 +270,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 String message = image_text.getText().toString().trim();
                                 alertDialog.dismiss();
-                                sendMessage(myId, friendId, message, selectedImageUri.toString());
+                                sendMessage(myId, friendId, message, imageUrl[0]);
                             }
                         });
                     }

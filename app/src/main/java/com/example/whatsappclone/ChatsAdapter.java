@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
 
     Context context;
     List<ChatsModel> chatsList;
+    ProgressBar progressBar;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -77,8 +79,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
         if(viewtype == 2 || viewtype == 3)
         {
             try {
-                Picasso.with(context).load(chats.getImageUrl()).into(holder.imageView);
+                Picasso.with(context).load(chats.getImageUrl()).into(holder.image);
                 holder.showMessage.setText(chats.getMessage());
+                System.out.println(chats.getMessage());
                 System.out.println(chats.getImageUrl());
             }
             catch (Exception e) {
@@ -107,12 +110,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
     class MyViewHolder extends RecyclerView.ViewHolder
     {
         TextView message,showMessage;//Show message is for the text below the image
-        ImageView imageView;
+        ImageView image;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            progressBar = itemView.findViewById(R.id.progress_bar_chat);
             message = itemView.findViewById(R.id.message);
             showMessage = itemView.findViewById(R.id.show_message);
-            imageView = itemView.findViewById(R.id.image);
+            image = itemView.findViewById(R.id.image_message);
         }
     }
 
