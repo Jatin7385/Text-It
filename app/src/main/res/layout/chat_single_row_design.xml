@@ -16,21 +16,13 @@
             android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:textSize="30dp"
             android:layout_marginStart="30dp"
+            android:layout_marginTop="16dp"
             android:layout_toEndOf="@+id/image"
             android:text="TextView"
             android:textColor="#FFFFFF" />
-
-        <TextView
-            android:id="@+id/desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/header"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="29dp"
-            android:layout_toEndOf="@+id/image"
-            android:text="TextView"
-            android:textColor="#939ca3" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image"
@@ -40,16 +32,6 @@
             app:civ_border_color="@color/white"
             android:src="@drawable/profilepicc"/>
 
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="27dp"
-            android:layout_marginEnd="2dp"
-            android:text="16:05"
-            android:textColor="#939ca3" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

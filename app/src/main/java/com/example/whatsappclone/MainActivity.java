@@ -23,22 +23,12 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment[0]).commit();
 
         chats = (Button)findViewById(R.id.chats_button);
-        status = (Button)findViewById(R.id.status_button);
         calls = (Button)findViewById(R.id.profile_button);
 
         chats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedFragment[0] = new ChatsFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        selectedFragment[0]).commit();
-            }
-        });
-
-        status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedFragment[0] = new StatusFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         selectedFragment[0]).commit();
             }

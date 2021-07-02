@@ -91,7 +91,6 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             super(itemView);
             img = itemView.findViewById(R.id.image);
             header = itemView.findViewById(R.id.header);
-            desc = itemView.findViewById(R.id.desc);
             context = itemView.getContext();
         }
     }

@@ -17,7 +17,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="1dp"
-            android:layout_marginEnd="352dp"
+            android:layout_marginEnd="332dp"
             android:background="@drawable/ic_baseline_arrow_back_24"
             android:backgroundTint="#232d36"
             app:backgroundTint="#FFFFFF" />
@@ -30,6 +30,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/profilepic"
+            android:gravity="center_horizontal"
             android:text="Hello blud"
             android:textAlignment="center"
             android:textColor="#939ca3"
@@ -39,44 +40,10 @@
             android:id="@+id/profilepic"
             android:layout_width="50dp"
             android:layout_height="54dp"
-            android:layout_marginStart="-355dp"
+            android:layout_marginStart="-335dp"
             android:layout_marginTop="0dp"
             android:layout_toEndOf="@+id/back_button"
             app:srcCompat="@drawable/circular" />
 
-        <Button
-            android:layout_width="54dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="89dp"
-            android:background="@drawable/ic_baseline_videocam_24"
-            android:backgroundTint="#232d36"
-            app:backgroundTint="#FFFFFF" />
-
-        <Button
-            android:layout_width="46dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="37dp"
-            android:background="@drawable/ic_baseline_call_24"
-            android:backgroundTint="#232d36"
-            app:backgroundTint="#FFFFFF" />
-
-        <Button
-            android:id="@+id/threedots"
-            android:layout_width="39dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="310dp"
-            android:layout_marginTop="-16dp"
-            android:layout_marginEnd="-3dp"
-            android:layout_marginRight="5dp"
-            android:backgroundTint="#232d36"
-            android:text="&#8942;"
-            android:textColor="#FFFFFF"
-            android:textFontWeight="1000"
-            android:textSize="45dp"
-            app:backgroundTint="#FFFFFF" />
     </RelativeLayout>
 </RelativeLayout>

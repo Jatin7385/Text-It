@@ -20,40 +20,7 @@
             android:textColor="#939ca3"
             android:textSize="30dp" />
 
-        <Button
-            android:id="@+id/search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="131dp"
-            android:layout_marginLeft="300dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="60dp"
-            android:layout_toEndOf="@+id/title"
-            android:background="@drawable/ic_baseline_search_24"
-            android:backgroundTint="#232d36"
-            app:backgroundTint="#939ca3" />
         <!--The string in the text of the button below brings the three dots-->
-        <Button
-            android:id="@+id/threedots"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="190dp"
-            android:layout_marginLeft="300dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_toEndOf="@+id/title"
-            android:text="&#8942;"
-            android:textSize="30dp"
-            android:textFontWeight="1000"
-            android:textColor="#939ca3"
-            android:backgroundTint="#232d36"
-            app:backgroundTint="#939ca3" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -69,23 +36,15 @@
 
             <Button
                 android:id="@+id/chats_button"
-                android:layout_width="135dp"
+                android:layout_width="222dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#232d36"
                 android:text="CHATS"
                 android:textColor="#939ca3" />
 
             <Button
-                android:id="@+id/status_button"
-                android:layout_width="135dp"
-                android:layout_height="match_parent"
-                android:backgroundTint="#232d36"
-                android:text="STATUS"
-                android:textColor="#939ca3" />
-
-            <Button
                 android:id="@+id/profile_button"
-                android:layout_width="143dp"
+                android:layout_width="196dp"
                 android:layout_height="match_parent"
                 android:backgroundTint="#232d36"
                 android:text="PROFILE"
