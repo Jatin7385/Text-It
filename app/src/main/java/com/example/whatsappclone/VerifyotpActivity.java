@@ -368,76 +368,12 @@ public class VerifyotpActivity extends AppCompatActivity {
             }
         });
 
-            num1.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if(keyCode == KeyEvent.KEYCODE_0 || keyCode == KeyEvent.KEYCODE_1 || keyCode == KeyEvent.KEYCODE_2 || keyCode == KeyEvent.KEYCODE_3 || keyCode == KeyEvent.KEYCODE_4 || keyCode == KeyEvent.KEYCODE_5
-                    ||keyCode == KeyEvent.KEYCODE_6 || keyCode == KeyEvent.KEYCODE_7 || keyCode == KeyEvent.KEYCODE_8 || keyCode == KeyEvent.KEYCODE_9 || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_COMMA || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT)
-                    {
-                        num2.requestFocus();
-//                        switch (keyCode) {
-//                            case KeyEvent.KEYCODE_0: num2.setText("0");
-//                                                     break;
-//                            case KeyEvent.KEYCODE_1: num2.setText("2");
-//                                break;
-//                            case KeyEvent.KEYCODE_2: num2.setText("2");
-//                                break;
-//                            case KeyEvent.KEYCODE_3: num2.setText("3");
-//                                break;
-//                            case KeyEvent.KEYCODE_4: num2.setText("4");
-//                                break;
-//                            case KeyEvent.KEYCODE_5: num2.setText("5");
-//                                break;
-//                            case KeyEvent.KEYCODE_6: num2.setText("6");
-//                                break;
-//                            case KeyEvent.KEYCODE_7: num2.setText("7");
-//                                break;
-//                            case KeyEvent.KEYCODE_8: num2.setText("8");
-//                                break;
-//                            case KeyEvent.KEYCODE_9: num2.setText("9");
-//                                break;
-//                            default: num2.setText("");
-//                                break;
-//                        }
-                    }
-                    return false;
-                }
-            });
-
-            num2.setOnKeyListener(new View.OnKeyListener() {
+        num2.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && num2.getText().toString().trim().isEmpty()) {
+                    num1.setText("");
                     num1.requestFocus();
-                }
-                else if(keyCode == KeyEvent.KEYCODE_0 || keyCode == KeyEvent.KEYCODE_1 || keyCode == KeyEvent.KEYCODE_2 || keyCode == KeyEvent.KEYCODE_3 || keyCode == KeyEvent.KEYCODE_4 || keyCode == KeyEvent.KEYCODE_5
-                        ||keyCode == KeyEvent.KEYCODE_6 || keyCode == KeyEvent.KEYCODE_7 || keyCode == KeyEvent.KEYCODE_8 || keyCode == KeyEvent.KEYCODE_9 || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_COMMA || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT)
-                {
-                    num3.requestFocus();
-//                    switch (keyCode) {
-//                        case KeyEvent.KEYCODE_0: num3.setText("0");
-//                            break;
-//                        case KeyEvent.KEYCODE_1: num3.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_2: num3.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_3: num3.setText("3");
-//                            break;
-//                        case KeyEvent.KEYCODE_4: num3.setText("4");
-//                            break;
-//                        case KeyEvent.KEYCODE_5: num3.setText("5");
-//                            break;
-//                        case KeyEvent.KEYCODE_6: num3.setText("6");
-//                            break;
-//                        case KeyEvent.KEYCODE_7: num3.setText("7");
-//                            break;
-//                        case KeyEvent.KEYCODE_8: num3.setText("8");
-//                            break;
-//                        case KeyEvent.KEYCODE_9: num3.setText("9");
-//                            break;
-//                        default: num3.setText("");
-//                            break;
-//                    }
                 }
                 return false;
             }
@@ -447,36 +383,8 @@ public class VerifyotpActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && num3.getText().toString().trim().isEmpty()) {
+                    num2.setText("");
                     num2.requestFocus();
-                }
-                else if(keyCode == KeyEvent.KEYCODE_0 || keyCode == KeyEvent.KEYCODE_1 || keyCode == KeyEvent.KEYCODE_2 || keyCode == KeyEvent.KEYCODE_3 || keyCode == KeyEvent.KEYCODE_4 || keyCode == KeyEvent.KEYCODE_5
-                        ||keyCode == KeyEvent.KEYCODE_6 || keyCode == KeyEvent.KEYCODE_7 || keyCode == KeyEvent.KEYCODE_8 || keyCode == KeyEvent.KEYCODE_9 || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_COMMA || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT)
-                {
-                    num4.requestFocus();
-//                    switch (keyCode) {
-//                        case KeyEvent.KEYCODE_0: num4.setText("0");
-//                            break;
-//                        case KeyEvent.KEYCODE_1: num4.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_2: num4.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_3: num4.setText("3");
-//                            break;
-//                        case KeyEvent.KEYCODE_4: num4.setText("4");
-//                            break;
-//                        case KeyEvent.KEYCODE_5: num4.setText("5");
-//                            break;
-//                        case KeyEvent.KEYCODE_6: num4.setText("6");
-//                            break;
-//                        case KeyEvent.KEYCODE_7: num4.setText("7");
-//                            break;
-//                        case KeyEvent.KEYCODE_8: num4.setText("8");
-//                            break;
-//                        case KeyEvent.KEYCODE_9: num4.setText("9");
-//                            break;
-//                        default: num4.setText("");
-//                            break;
-//                    }
                 }
                 return false;
             }
@@ -486,36 +394,8 @@ public class VerifyotpActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && num4.getText().toString().trim().isEmpty()) {
+                    num3.setText("");
                     num3.requestFocus();
-                }
-                else if(keyCode == KeyEvent.KEYCODE_0 || keyCode == KeyEvent.KEYCODE_1 || keyCode == KeyEvent.KEYCODE_2 || keyCode == KeyEvent.KEYCODE_3 || keyCode == KeyEvent.KEYCODE_4 || keyCode == KeyEvent.KEYCODE_5
-                        ||keyCode == KeyEvent.KEYCODE_6 || keyCode == KeyEvent.KEYCODE_7 || keyCode == KeyEvent.KEYCODE_8 || keyCode == KeyEvent.KEYCODE_9 || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_COMMA || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT)
-                {
-                    num5.requestFocus();
-//                    switch (keyCode) {
-//                        case KeyEvent.KEYCODE_0: num5.setText("0");
-//                            break;
-//                        case KeyEvent.KEYCODE_1: num5.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_2: num5.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_3: num5.setText("3");
-//                            break;
-//                        case KeyEvent.KEYCODE_4: num5.setText("4");
-//                            break;
-//                        case KeyEvent.KEYCODE_5: num5.setText("5");
-//                            break;
-//                        case KeyEvent.KEYCODE_6: num5.setText("6");
-//                            break;
-//                        case KeyEvent.KEYCODE_7: num5.setText("7");
-//                            break;
-//                        case KeyEvent.KEYCODE_8: num5.setText("8");
-//                            break;
-//                        case KeyEvent.KEYCODE_9: num5.setText("9");
-//                            break;
-//                        default: num5.setText("");
-//                            break;
-//                    }
                 }
                 return false;
             }
@@ -525,36 +405,8 @@ public class VerifyotpActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && num5.getText().toString().trim().isEmpty()) {
+                    num4.setText("");
                     num4.requestFocus();
-                }
-                else if(keyCode == KeyEvent.KEYCODE_0 || keyCode == KeyEvent.KEYCODE_1 || keyCode == KeyEvent.KEYCODE_2 || keyCode == KeyEvent.KEYCODE_3 || keyCode == KeyEvent.KEYCODE_4 || keyCode == KeyEvent.KEYCODE_5
-                        ||keyCode == KeyEvent.KEYCODE_6 || keyCode == KeyEvent.KEYCODE_7 || keyCode == KeyEvent.KEYCODE_8 || keyCode == KeyEvent.KEYCODE_9 || keyCode == KeyEvent.KEYCODE_SPACE || keyCode == KeyEvent.KEYCODE_COMMA || keyCode == KeyEvent.KEYCODE_NUMPAD_DOT)
-                {
-                    num6.requestFocus();
-//                    switch (keyCode) {
-//                        case KeyEvent.KEYCODE_0: num6.setText("0");
-//                            break;
-//                        case KeyEvent.KEYCODE_1: num6.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_2: num6.setText("2");
-//                            break;
-//                        case KeyEvent.KEYCODE_3: num6.setText("3");
-//                            break;
-//                        case KeyEvent.KEYCODE_4: num6.setText("4");
-//                            break;
-//                        case KeyEvent.KEYCODE_5: num6.setText("5");
-//                            break;
-//                        case KeyEvent.KEYCODE_6: num6.setText("6");
-//                            break;
-//                        case KeyEvent.KEYCODE_7: num6.setText("7");
-//                            break;
-//                        case KeyEvent.KEYCODE_8: num6.setText("8");
-//                            break;
-//                        case KeyEvent.KEYCODE_9: num6.setText("9");
-//                            break;
-//                        default: num6.setText("");
-//                            break;
-//                    }
                 }
                 return false;
             }
@@ -564,6 +416,7 @@ public class VerifyotpActivity extends AppCompatActivity {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_DEL && num6.getText().toString().trim().isEmpty()) {
+                    num5.setText("");
                     num5.requestFocus();
                 }
                 return false;

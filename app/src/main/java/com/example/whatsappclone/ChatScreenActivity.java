@@ -1,11 +1,16 @@
 package com.example.whatsappclone;
 
+import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +29,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -57,7 +65,8 @@ public class ChatScreenActivity extends AppCompatActivity {
     private EditText text;
     private String message;
     private String name, url, friendId, myId, time;
-    int SELECT_PICTURE = 200;
+    private int SELECT_PICTURE = 200;
+    private int CAPTURE_IMAGE = 100;
     private TextView textView_name;
     private CircleImageView profilepic;
     private FirebaseUser user;
@@ -90,7 +99,52 @@ public class ChatScreenActivity extends AppCompatActivity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageChooser();
+                final AlertDialog.Builder alert = new AlertDialog.Builder(ChatScreenActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.image_option_dialog, null);
+                Button camera = view.findViewById(R.id.camera_button);
+                Button gallery = view.findViewById(R.id.gallery_button);
+                Button dismiss = view.findViewById(R.id.dismiss_button);
+                alert.setView(view);
+                final AlertDialog alertDialog = alert.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+
+                camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        //Request for camera runtime permission
+                        if(ContextCompat.checkSelfPermission(ChatScreenActivity.this, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(ChatScreenActivity.this,new String[]{
+                                    Manifest.permission.CAMERA
+                            },100);
+                        }
+
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent,100);
+
+                        alertDialog.dismiss();
+                    }
+                });
+
+                gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        imageChooser();
+                        alertDialog.dismiss();
+                    }
+                });
+
+                dismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+
             }
         });
 
@@ -136,11 +190,11 @@ public class ChatScreenActivity extends AppCompatActivity {
                 text.setText("");
             }
         });
-
+        send.setEnabled(false);
         text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (s.toString().length() > 0) {
+                if (s.toString().trim().length() > 0) {
                     send.setEnabled(true);
                 } else {
                     send.setEnabled(false);
@@ -149,12 +203,20 @@ public class ChatScreenActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (s.toString().trim().length() > 0) {
+                    send.setEnabled(true);
+                } else {
+                    send.setEnabled(false);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (s.toString().trim().length() > 0) {
+                    send.setEnabled(true);
+                } else {
+                    send.setEnabled(false);
+                }
             }
         });
 
@@ -215,7 +277,41 @@ public class ChatScreenActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
+        if(resultCode == RESULT_OK && requestCode == CAPTURE_IMAGE)
+        {
+            final String[] imageUrl = new String[1];
+            Button imagePreviewSend;
+            ImageView previewImage;
+            EditText image_text;
+            final AlertDialog.Builder alert = new AlertDialog.Builder(ChatScreenActivity.this);
+            View view = getLayoutInflater().inflate(R.layout.image_preview_dialog, null);
+            imagePreviewSend = view.findViewById(R.id.preview_button);
+            previewImage = view.findViewById(R.id.image_preview);
+            image_text = view.findViewById(R.id.image_text);
+            alert.setView(view);
+            final AlertDialog alertDialog = alert.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            previewImage.setImageBitmap(bitmap);
+
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
+            Uri imageUri = Uri.parse(path);
+            imageUrl[0] = imageUri.toString();
+
+            imagePreviewSend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String message = image_text.getText().toString().trim();
+                    alertDialog.dismiss();
+                    sendMessage(myId, friendId, message, imageUrl[0]);
+                }
+            });
+        }
+        else if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE) {
             final String[] imageUrl = new String[1];
             Button imagePreviewSend;
             ImageView previewImage;
@@ -231,50 +327,48 @@ public class ChatScreenActivity extends AppCompatActivity {
             alertDialog.show();
             // compare the resultCode with the
             // SELECT_PICTURE constant
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // update the preview image in the layout
-                    progressBar.setVisibility(View.VISIBLE);
-                    System.out.println(selectedImageUri.toString());
-                    while (selectedImageUri == null) {
-                        continue;
-                    }
-                    progressBar.setVisibility(View.INVISIBLE);
-                    //previewImage.setImageURI(selectedImageUri);
-                    Picasso.with(ChatScreenActivity.this).load(selectedImageUri.toString()).into(previewImage);
-
-                    String filepath = "Photos/" + "chatImages" + user.getUid() + String.valueOf(imageCount);
-                    imageCount++;
-                    StorageReference reference = FirebaseStorage.getInstance().getReference(filepath);
-                    if (selectedImageUri != null) {
-                        // update the preview image in the layout
-                        reference.putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
-
-                                task.addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        imageUrl[0] = uri.toString();
-                                        System.out.println("Photo added in Storage");
-                                    }
-                                });
-                            }
-                        });
-
-                        imagePreviewSend.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String message = image_text.getText().toString().trim();
-                                alertDialog.dismiss();
-                                sendMessage(myId, friendId, message, imageUrl[0]);
-                            }
-                        });
-                    }
+            // Get the url of the image from data
+            Uri selectedImageUri = data.getData();
+            if (null != selectedImageUri) {
+                // update the preview image in the layout
+                progressBar.setVisibility(View.VISIBLE);
+                System.out.println(selectedImageUri.toString());
+                while (selectedImageUri == null) {
+                    continue;
                 }
+                progressBar.setVisibility(View.INVISIBLE);
+                //previewImage.setImageURI(selectedImageUri);
+                Picasso.with(ChatScreenActivity.this).load(selectedImageUri.toString()).into(previewImage);
+
+                String filepath = "Photos/" + "chatImages" + user.getUid() + String.valueOf(imageCount);
+                imageCount++;
+                StorageReference reference = FirebaseStorage.getInstance().getReference(filepath);
+                if (selectedImageUri != null) {
+                    // update the preview image in the layout
+                    reference.putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+
+                            task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    imageUrl[0] = uri.toString();
+                                    System.out.println("Photo added in Storage");
+                                }
+                            });
+                        }
+                    });
+
+                    imagePreviewSend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String message = image_text.getText().toString().trim();
+                            alertDialog.dismiss();
+                            sendMessage(myId, friendId, message, imageUrl[0]);
+                        }
+                    });
+                    }
             }
         }
     }

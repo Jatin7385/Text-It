@@ -1,14 +1,21 @@
 package com.example.whatsappclone;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -40,6 +48,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
     private CircleImageView profile_pic;
     FirebaseUser user;
     int SELECT_PICTURE = 200;
+    int CAPTURE_IMAGE = 100;
     private Uri uri;
     private String imageURL = "default";
     private String name;
@@ -71,7 +80,50 @@ public class ProfileSetUpActivity extends AppCompatActivity {
         profile_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageChooser();
+                final AlertDialog.Builder alert = new AlertDialog.Builder(ProfileSetUpActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.image_option_dialog, null);
+                Button camera = view.findViewById(R.id.camera_button);
+                Button gallery = view.findViewById(R.id.gallery_button);
+                Button dismiss = view.findViewById(R.id.dismiss_button);
+                alert.setView(view);
+                final AlertDialog alertDialog = alert.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+
+                camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        //Request for camera runtime permission
+                        if(ContextCompat.checkSelfPermission(ProfileSetUpActivity.this, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(ProfileSetUpActivity.this,new String[]{
+                                    Manifest.permission.CAMERA
+                            },100);
+                        }
+
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent,100);
+
+                        alertDialog.dismiss();
+                    }
+                });
+
+                gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        imageChooser();
+                        alertDialog.dismiss();
+                    }
+                });
+
+                dismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -134,7 +186,48 @@ public class ProfileSetUpActivity extends AppCompatActivity {
         next_button.setEnabled(false);
         next_button.getBackground().setAlpha(50);
 
-        if (resultCode == RESULT_OK) {
+
+        if(resultCode == RESULT_OK && requestCode == CAPTURE_IMAGE)
+        {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "Title", null);
+            Uri imageUri = Uri.parse(path);
+
+            String filepath = "Photos/" + "userprofile" + user.getUid();
+            StorageReference reference = FirebaseStorage.getInstance().getReference(filepath);
+            if (imageUri != null ) {
+                // update the preview image in the layout
+                profile_pic.setImageURI(imageUri);
+                reference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> task = taskSnapshot.getMetadata().getReference().getDownloadUrl();
+
+                        task.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                imageURL = uri.toString();
+                                if(imageURL == "null")
+                                {
+                                    Uri urii = Uri.parse("app/src/main/res/drawable-v24/profilepicc.png");
+                                    imageURL = urii.toString();
+                                }
+                                System.out.println(imageURL);
+                                progressBar.setVisibility(View.INVISIBLE);
+                                next_button.setEnabled(true);
+                                next_button.getBackground().setAlpha(255);
+                            }
+                        });
+                    }
+                });
+
+            }
+        }
+
+        else if (resultCode == RESULT_OK) {
 
             // compare the resultCode with the
             // SELECT_PICTURE constant
