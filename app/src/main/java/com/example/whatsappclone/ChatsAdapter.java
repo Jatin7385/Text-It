@@ -1,5 +1,6 @@
 package com.example.whatsappclone;
 
+import android.annotation.SuppressLint;
 import android.media.Image;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -8,14 +9,17 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -88,6 +92,30 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
                 System.out.println("ERROR : " + e.getLocalizedMessage());
                 System.out.println(chats.getImageUrl());
             }
+
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.view_chat_image_dialog, null);
+                    PhotoView imageView = view.findViewById(R.id.image_view);
+                    Button back = view.findViewById(R.id.image_dismiss_button);
+                    TextView message = view.findViewById(R.id.image_name);
+                    alert.setView(view);
+                    final AlertDialog alertDialog = alert.create();
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    Picasso.with(context).load(chats.getImageUrl()).into(imageView);
+                    message.setText(chats.getMessage());
+                    alertDialog.show();
+                    back.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                }
+            });
         }
 
         else{

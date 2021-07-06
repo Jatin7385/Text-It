@@ -15,13 +15,14 @@
         <ImageView
             android:id="@+id/image_message"
             android:layout_width="wrap_content"
+            android:clickable="true"
             android:layout_height="wrap_content"
             android:padding="30dp"
             android:layout_margin="10dp"
             android:background="#212e36"/>
 
         <TextView
-            android:id="@+id/message"
+            android:id="@+id/show_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="30dp"

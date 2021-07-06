@@ -1,5 +1,6 @@
 package com.example.whatsappclone;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +9,17 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -76,6 +81,32 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             Picasso.with(context).load(url).into(holder.img);
         }
         holder.header.setText(user.getName());
+
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!url.equals("default")) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.view_image_dialog, null);
+                    PhotoView imageView = view.findViewById(R.id.image_view);
+                    Button back = view.findViewById(R.id.image_dismiss_button);
+                    TextView name = view.findViewById(R.id.image_name);
+                    alert.setView(view);
+                    final AlertDialog alertDialog = alert.create();
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    Picasso.with(context).load(url).into(imageView);
+                    name.setText(user.getName());
+                    alertDialog.show();
+                    back.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
