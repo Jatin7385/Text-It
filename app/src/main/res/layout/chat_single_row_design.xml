@@ -32,6 +32,15 @@
             app:civ_border_color="@color/white"
             android:src="@drawable/profilepicc"/>
 
+        <TextView
+            android:id="@+id/row_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="116dp"
+            android:layout_marginTop="30dp"
+            android:layout_toEndOf="@+id/header" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

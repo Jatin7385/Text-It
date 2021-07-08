@@ -76,6 +76,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private RecyclerView recView;
     private ProgressBar progressBar;
     private int imageCount = 0;
+    private String date;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +86,6 @@ public class ChatScreenActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        time = new SimpleDateFormat("HHmm").format(Calendar.getInstance().getTime());
 
         back = findViewById(R.id.back_button);
         send = findViewById(R.id.sendButton);
@@ -159,6 +158,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         name = (String) b.get("name");
         url = (String) b.get("url");
         friendId = (String) b.get("friendId");
+        System.out.println("Friend Id : " + friendId);
         myId = user.getUid();
 
         textView_name.setText(name);
@@ -251,13 +251,17 @@ public class ChatScreenActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String myId, String friendId, String message, String uri) {
+        time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+        date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+        System.out.println(time);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", myId);
         hashMap.put("receiver", friendId);
         hashMap.put("message", message);
         hashMap.put("imageUrl", uri);
-        //hashMap.put("time",time);
+        hashMap.put("time",time);
+        hashMap.put("date",date);
         databaseReference.child("Chats").push().setValue(hashMap);
     }
 

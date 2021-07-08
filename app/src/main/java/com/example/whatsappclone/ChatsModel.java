@@ -8,18 +8,25 @@ public class ChatsModel {
     String imageUrl;
     String message;
     String time;
+    String date;
 
-    public ChatsModel(String sender, String receiver, String imageUrl, String message, String time) {
+    public ChatsModel(String sender, String receiver, String imageUrl, String message, String time,String date) {
         this.sender = sender;
         this.receiver = receiver;
         this.imageUrl = imageUrl;
         this.message = message;
         this.time = time;
+        this.date = date;
     }
 
     public ChatsModel()
     {
-
+        this.sender = "";
+        this.receiver = "";
+        this.imageUrl = "null";
+        this.message = "";
+        this.time = "";
+        this.date = "";
     }
 
     public String getSender() {
@@ -60,5 +67,13 @@ public class ChatsModel {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -20,16 +20,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatsFragment extends Fragment {
-    RecyclerView recyclerView;
-    List<UsersModel> userList;
-    FirebaseUser firebaseUser;
+    private RecyclerView recyclerView;
+    private List<UsersModel> userList;
+    private FirebaseUser firebaseUser;
+    private List<String> time;
+    private List<ChatsModel> chatsList;
+    private String maxTime,date;
+    private String myId;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,8 +43,8 @@ public class ChatsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.Recycler_View);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         userList = new ArrayList<>();
-
-        String time = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
+        time = new ArrayList<>();
+        chatsList = new ArrayList<>();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -46,23 +52,58 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userList.clear();
-
+                firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                myId = firebaseUser.getUid();
                 for(DataSnapshot snapshot1 : snapshot.getChildren())
                 {
                     UsersModel users = snapshot1.getValue(UsersModel.class);
-
-                    firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    String friendId = users.getId();
 
                     if(!users.getId().equals(firebaseUser.getUid()))
                     {
+                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Chats");
+                        chatsList.clear();
+                        reference1.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                                    ChatsModel chats = snapshot1.getValue(ChatsModel.class);
+                                    if (chats.getSender().equals(myId) && chats.getReceiver().equals(friendId) || chats.getSender().equals(friendId) && chats.getReceiver().equals(myId)) {
+                                        chatsList.add(chats);
+                                    }
+                                }
+
+                                try {
+                                    String arr[] = getMaxTime(chatsList);
+                                    date = arr[0];
+                                    maxTime = arr[1];
+                                    String op = arr[2];
+
+                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference();
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    hashMap.put("myId", myId);
+                                    hashMap.put("friendId", friendId);
+                                    hashMap.put("time", maxTime);
+                                    hashMap.put("date", date);
+                                    hashMap.put("option", op);
+                                    reference2.child("Time").push().setValue(hashMap);
+                                }catch (Exception e)
+                                {
+                                    System.out.println("Error : " + e.getLocalizedMessage().toString());
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         userList.add(users);
+
                     }
                 }
-                for(int i=0;i<userList.size();i++){
-                    System.out.println(userList.get(i));
-                }
-                System.out.println("size : "+userList.size());
-
+//                userList = sortUserList(userList);
                 recyclerView.setAdapter(new myadapter(userList));
             }
 
@@ -72,21 +113,97 @@ public class ChatsFragment extends Fragment {
             }
         });
 
+
+
         return view;
     }
+
+//    private List<UsersModel> sortUserList(List<UsersModel> userList) {
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Time");
+//        int n = userList.size();
+//        List<TimeModel> timeModelList = new ArrayList<>();
+//        List<TimeModel> timeModelList_order = new ArrayList<>();
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+//                        TimeModel timeModel = snapshot1.getValue(TimeModel.class);
+//                        timeModelList.add(timeModel);
+//                    }
+//                }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
 //
-//    class Sortbytime implements Comparator<UsersModel>
-//    {
-//        // Used for sorting in ascending order of
-//        // roll number
-//        public int compare(Student a, Student b)
+//            }
+//        });
+//
+//        //Putting the timeModelList in the same order as the userlist, to make it easier to sort it
+//        for(int i=0;i<n;i++)
 //        {
-//            return a.rollno - b.rollno;
+//            for(int j = 0;j<timeModelList.size();j++)
+//            {
+//                if(userList.get(i).getId().equals(timeModelList.get(j).getFriendId()))
+//                {
+//                    timeModelList_order.add(timeModelList.get(j));
+//                    break;
+//                }
+//            }
 //        }
 //
-//        @Override
-//        public int compare(UsersModel o1, UsersModel o2) {
-//            return o2.get;
+//        UsersModel temp = null;
+//        for(int i=0; i < n; i++){
+//            for(int j=1; j < (n-i); j++){
+//                if(timeModelList_order.get(j-1).getDate().compareTo(timeModelList.get(j).getDate()) >= 0 && timeModelList_order.get(j-1).getTime().compareTo(timeModelList.get(j).getTime()) >=0)
+//                    //swap elements
+//                    temp = userList.get(j-1);
+//                    userList.add(j-1, userList.get(j));
+//                    userList.add(j,temp);
+//                }
+//            }
+//
+//        return userList;
 //        }
-//    }
+
+    private String[] getMaxTime(List<ChatsModel> chatsList) {
+        String maxTime = chatsList.get(0).getTime();
+        String maxdate = chatsList.get(0).getDate();
+        String date = chatsList.get(0).getDate();
+        String time = chatsList.get(0).getTime();
+        for(int i=1;i<chatsList.size();i++)
+        {
+            if(chatsList.get(i).getTime().compareTo(maxTime) > 0)
+            {
+                maxTime = chatsList.get(i).getTime();
+                date = chatsList.get(i).getDate();
+            }
+
+            if(chatsList.get(i).getDate().compareTo(maxdate) > 0)
+            {
+                maxdate = chatsList.get(i).getDate();
+                time = chatsList.get(i).getTime();
+            }
+            System.out.println("OUT : " + maxTime + " , " + date + " , " + time + " , " + maxdate);
+        }
+
+        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
+        String arr[] = new String[3];
+
+        //0 denotes that the date of the latest message is not the date of that day, so display the date instead of time.
+        //1 denotes that the date of the latest message is the date of that day, so display the time.
+
+        if(date.compareTo(currentDate) != 0)
+        {
+            arr[0] = maxdate;
+            arr[1] = time;
+            arr[2] = "0";
+        }
+        else
+        {
+            arr[0] = date;
+            arr[1] = maxTime;
+            arr[2] = "1";
+        }
+        return arr;
+    }
 }

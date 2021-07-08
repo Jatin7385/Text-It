@@ -22,12 +22,18 @@ import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URI;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +46,11 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     private UsersModel user;
     private String url;
     private String name;
+    private FirebaseUser firebaseUser;
+    private String myId;
+    private String friendId;
+    private List<TimeModel> timeModelList;
+    private String maxTime,date;
 
     public myadapter(List<UsersModel> userList) {
         this.userList = userList;
@@ -49,13 +60,16 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     @Override
     public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_single_row_design,parent,false);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        myId = firebaseUser.getUid();
+        timeModelList = new ArrayList<>();
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(view.getContext(), ChatScreenActivity.class);
                 intent.putExtra("url",url);
                 intent.putExtra("name",name);
-                intent.putExtra("friendId",user.getId());
+                intent.putExtra("friendId",friendId);
                 view.getContext().startActivity(intent);
             }
         });
@@ -64,12 +78,45 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
 
     @Override
     public void onBindViewHolder(@NonNull myviewholder holder, int position) {
-
         user = userList.get(position);
+        friendId = user.getId();
         url = user.getImageURL();
         name = user.getName();
 
-        //System.out.println("URL : "+url);
+        
+
+        System.out.println("FRIEND ID : : " + position);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Time");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    TimeModel timeModel = snapshot1.getValue(TimeModel.class);
+                    if(timeModel.getMyId() == myId && timeModel.getFriendId() == userList.get(position).getId())
+                    {
+                        String op = timeModel.getOption();
+                        if(op.equals("0"))
+                        {
+                            date = timeModel.getDate();
+                            holder.time.setText(date);
+                        }
+                        else if(op.equals("1")){
+                            maxTime = timeModel.getTime();
+                            holder.time.setText(maxTime.substring(0,5));
+                        }
+                    }
+                    timeModelList.add(timeModel);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         if(url.equals("default"))
         {
             String uri = "@drawable/profilepicc";
@@ -123,6 +170,7 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             img = itemView.findViewById(R.id.image);
             header = itemView.findViewById(R.id.header);
             context = itemView.getContext();
+            time = itemView.findViewById(R.id.row_time);
         }
     }
 }
