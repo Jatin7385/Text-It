@@ -4,6 +4,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
@@ -24,9 +25,20 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+
+/*
+1. When the user uses the app for the first time, the userList should be empty.
+2. Then, the user should click on the search button, which should bring an edit text out(or a dialog). The user must type the name of the friend user.
+   If the name typed matches the names of the users in the Users node of firebase, then show the users card with the same on click listeners.
+3. If the friend user has a chat with the current user, then add the user to the userList and sort the user in the userList on the basis of the max time
+*/
+
 
 public class ChatsFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -34,6 +46,7 @@ public class ChatsFragment extends Fragment {
     private FirebaseUser firebaseUser;
     private List<String> time;
     private List<ChatsModel> chatsList;
+    private List<TimeModel> timeModelList;
     private String maxTime,date;
     private String myId;
     @Nullable
@@ -45,15 +58,20 @@ public class ChatsFragment extends Fragment {
         userList = new ArrayList<>();
         time = new ArrayList<>();
         chatsList = new ArrayList<>();
+        timeModelList = new ArrayList<>();
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        myId = firebaseUser.getUid();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        
+        timeModelList = getTimeList();
+        System.out.println(timeModelList.size());
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userList.clear();
-                firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                myId = firebaseUser.getUid();
                 for(DataSnapshot snapshot1 : snapshot.getChildren())
                 {
                     UsersModel users = snapshot1.getValue(UsersModel.class);
@@ -61,51 +79,26 @@ public class ChatsFragment extends Fragment {
 
                     if(!users.getId().equals(firebaseUser.getUid()))
                     {
-                        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Chats");
-                        chatsList.clear();
-                        reference1.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                                    ChatsModel chats = snapshot1.getValue(ChatsModel.class);
-                                    if (chats.getSender().equals(myId) && chats.getReceiver().equals(friendId) || chats.getSender().equals(friendId) && chats.getReceiver().equals(myId)) {
-                                        chatsList.add(chats);
-                                    }
-                                }
-
-                                try {
-                                    String arr[] = getMaxTime(chatsList);
-                                    date = arr[0];
-                                    maxTime = arr[1];
-                                    String op = arr[2];
-
-                                    DatabaseReference reference2 = FirebaseDatabase.getInstance().getReference();
-                                    HashMap<String, Object> hashMap = new HashMap<>();
-                                    hashMap.put("myId", myId);
-                                    hashMap.put("friendId", friendId);
-                                    hashMap.put("time", maxTime);
-                                    hashMap.put("date", date);
-                                    hashMap.put("option", op);
-                                    reference2.child("Time").push().setValue(hashMap);
-                                }catch (Exception e)
-                                {
-                                    System.out.println("Error : " + e.getLocalizedMessage().toString());
-                                }
-
+                        for(TimeModel timeModel : timeModelList)
+                        {
+                            if(users.getId().equals(timeModel.getFriendId()) && timeModel.getMyId().equals(myId))
+                            {
+                                userList.add(users);
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                        userList.add(users);
-
+                        }
+//                        userList.add(users);
                     }
                 }
-//                userList = sortUserList(userList);
-                recyclerView.setAdapter(new myadapter(userList));
+
+                myadapter adapter = new myadapter(userList);
+
+                System.out.println(userList.size());
+                reduceUserList(userList);
+                System.out.println(userList.size());
+
+                recyclerView.setAdapter(adapter);
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -118,92 +111,71 @@ public class ChatsFragment extends Fragment {
         return view;
     }
 
-//    private List<UsersModel> sortUserList(List<UsersModel> userList) {
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Time");
-//        int n = userList.size();
-//        List<TimeModel> timeModelList = new ArrayList<>();
-//        List<TimeModel> timeModelList_order = new ArrayList<>();
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-//                        TimeModel timeModel = snapshot1.getValue(TimeModel.class);
-//                        timeModelList.add(timeModel);
-//                    }
-//                }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//        //Putting the timeModelList in the same order as the userlist, to make it easier to sort it
-//        for(int i=0;i<n;i++)
-//        {
-//            for(int j = 0;j<timeModelList.size();j++)
-//            {
-//                if(userList.get(i).getId().equals(timeModelList.get(j).getFriendId()))
-//                {
-//                    timeModelList_order.add(timeModelList.get(j));
-//                    break;
-//                }
-//            }
-//        }
-//
-//        UsersModel temp = null;
-//        for(int i=0; i < n; i++){
-//            for(int j=1; j < (n-i); j++){
-//                if(timeModelList_order.get(j-1).getDate().compareTo(timeModelList.get(j).getDate()) >= 0 && timeModelList_order.get(j-1).getTime().compareTo(timeModelList.get(j).getTime()) >=0)
-//                    //swap elements
-//                    temp = userList.get(j-1);
-//                    userList.add(j-1, userList.get(j));
-//                    userList.add(j,temp);
-//                }
-//            }
-//
-//        return userList;
-//        }
-
-    private String[] getMaxTime(List<ChatsModel> chatsList) {
-        String maxTime = chatsList.get(0).getTime();
-        String maxdate = chatsList.get(0).getDate();
-        String date = chatsList.get(0).getDate();
-        String time = chatsList.get(0).getTime();
-        for(int i=1;i<chatsList.size();i++)
-        {
-            if(chatsList.get(i).getTime().compareTo(maxTime) > 0)
-            {
-                maxTime = chatsList.get(i).getTime();
-                date = chatsList.get(i).getDate();
+    private List<TimeModel> getTimeList() {
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Time");
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot2) {
+                for(DataSnapshot snapshot3 : snapshot2.getChildren())
+                {
+                    TimeModel timeModel = snapshot3.getValue(TimeModel.class);
+                    timeModelList.add(timeModel);
+                }
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-            if(chatsList.get(i).getDate().compareTo(maxdate) > 0)
-            {
-                maxdate = chatsList.get(i).getDate();
-                time = chatsList.get(i).getTime();
             }
-            System.out.println("OUT : " + maxTime + " , " + date + " , " + time + " , " + maxdate);
-        }
-
-        String currentDate = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-
-        String arr[] = new String[3];
-
-        //0 denotes that the date of the latest message is not the date of that day, so display the date instead of time.
-        //1 denotes that the date of the latest message is the date of that day, so display the time.
-
-        if(date.compareTo(currentDate) != 0)
-        {
-            arr[0] = maxdate;
-            arr[1] = time;
-            arr[2] = "0";
-        }
-        else
-        {
-            arr[0] = date;
-            arr[1] = maxTime;
-            arr[2] = "1";
-        }
-        return arr;
+        });
+        return timeModelList;
     }
+
+    private void reduceUserList(List<UsersModel> userList) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Time");
+        List<UsersModel> userList1 = new ArrayList<>();
+        int op = 0;
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int flag = 0;
+                for(DataSnapshot snapshot1 : snapshot.getChildren())
+                {
+                    TimeModel timeModel = new TimeModel();
+                    for(UsersModel user : userList)
+                    {
+                        if(timeModel.getFriendId().equals(user.getId()))
+                        {
+                            System.out.println("ReduceUserList : " +  timeModel.getFriendId());
+                            flag = 1;
+                            userList1.add(user);
+                        }
+                    }
+                }
+
+                if(flag == 1) {
+                    updateReceiptsList(userList1,0);
+                }
+                else
+                {
+                    updateReceiptsList(userList1,1);
+                }
+                System.out.println(userList.size());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void updateReceiptsList(List<UsersModel> newlist,int op) {
+        userList.clear();
+        if(op == 0) {
+            userList = newlist;
+        }
+
+    }
+
+
 }

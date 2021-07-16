@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.UserManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +44,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//After sending a message, when we come back to adapter, the userList becomes empty...
-
-public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.myviewholder>{
     ArrayList<datamodel> dataholder;
     Context context;
     List<UsersModel> userList;
@@ -59,12 +58,10 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     private String maxTime,maxdate;
     private String time;
     private String date;
-    private int listsize;
 
-    public myadapter(List<UsersModel> userList) {
+    public SearchAdapter(List<UsersModel> userList) {
 
         this.userList = userList;
-        //listsize = userList.size();
         sortUserList(userList);
     }
 
@@ -98,15 +95,12 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             }
         });
 
-        System.out.println("FRIEND ID : : " + friendId);
-
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Time");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     TimeModel timeModel = snapshot1.getValue(TimeModel.class);
-//                    System.out.println("USER ID'S : " +timeModel.getFriendId() + " , " +  userList.get(position).getId());
                     try {
                         if (timeModel.getMyId().equals(myId) && timeModel.getFriendId().equals(userList.get(position).getId())) {
                             if (!timeModel.getDate().equals(date)) {
@@ -196,6 +190,7 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     private void sortUserList(List<UsersModel> userList) {
         List<TimeModel> timeModelList = new ArrayList<>();
         List<UsersModel> userList1 = new ArrayList<>();
+        List<UsersModel> userList2 = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Time");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -210,20 +205,31 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
 
                 for(TimeModel timeModel : timeModelList)
                 {
-                    System.out.println("Time : " + timeModel.getTime());
-                }
-
-                for(TimeModel timeModel : timeModelList)
-                {
                     for(UsersModel user : userList)
                     {
                         if(user.getId().equals(timeModel.getFriendId()))
                         {
                             userList1.add(user);
-
+                            break;
+                        }
+                        else if(user == userList.get(userList.size()-1))
+                        {
+                            int flag = 0;
+                            for(UsersModel user1 : userList2)
+                            {
+                                if(user == user1)
+                                {
+                                    flag = 1;
+                                }
+                            }
+                            if(flag == 0) {
+                                userList2.add(user);
+                            }
                         }
                     }
                 }
+                userList1.addAll(userList2);
+
                 updateReceiptsList(userList1);
             }
 
@@ -231,7 +237,7 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });;
+        });
     }
 
     public void updateReceiptsList(List<UsersModel> newlist) {

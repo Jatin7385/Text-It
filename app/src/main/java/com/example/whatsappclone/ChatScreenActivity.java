@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -55,6 +56,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 //ADDED TIME HERE
@@ -77,6 +79,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private int imageCount = 0;
     private String date;
+    private int opp;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,6 +87,8 @@ public class ChatScreenActivity extends AppCompatActivity {
         setContentView(R.layout.in_chat_screen);
 
         getSupportActionBar().hide();
+
+        opp = 0;
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -175,6 +180,9 @@ public class ChatScreenActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                opp = 1;
+                Intent intent1 = new Intent(ChatScreenActivity.this,MainActivity.class);
+                startActivity(intent1);
                 finish();
             }
         });
@@ -253,7 +261,43 @@ public class ChatScreenActivity extends AppCompatActivity {
     private void sendMessage(String myId, String friendId, String message, String uri) {
         time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
         date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-        System.out.println(time);
+        final int[] flag = {0};
+       DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Time");
+        reference1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    TimeModel timeModel = snapshot1.getValue(TimeModel.class);
+                    if (timeModel.getMyId().equals(myId) && timeModel.getFriendId().equals(friendId)) {
+                        flag[0] = 1;
+                        HashMap<String,Object> hashMap = new HashMap();
+                        hashMap.put("date",date);
+                        hashMap.put("time",time);
+                        reference1.child(timeModel.getId()).updateChildren(hashMap);
+                    }
+
+                }
+                if(flag[0] == 0)
+                {
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("myId", myId);
+                    hashMap.put("friendId", friendId);
+                    hashMap.put("time", time);
+                    hashMap.put("date", date);
+                    String mGroupId = reference1.push().getKey();
+                    hashMap.put("id",mGroupId);
+                    reference1.child(mGroupId).setValue(hashMap);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        System.out.println("ImageUrl : " + uri);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", myId);
@@ -336,11 +380,13 @@ public class ChatScreenActivity extends AppCompatActivity {
             if (null != selectedImageUri) {
                 // update the preview image in the layout
                 progressBar.setVisibility(View.VISIBLE);
+                Toast.makeText(ChatScreenActivity.this,"This may take a few seconds",Toast.LENGTH_LONG).show();
+                imagePreviewSend.setEnabled(false);
+                imagePreviewSend.getBackground().setAlpha(50);
                 System.out.println(selectedImageUri.toString());
                 while (selectedImageUri == null) {
                     continue;
                 }
-                progressBar.setVisibility(View.INVISIBLE);
                 //previewImage.setImageURI(selectedImageUri);
                 Picasso.with(ChatScreenActivity.this).load(selectedImageUri.toString()).into(previewImage);
 
@@ -359,6 +405,9 @@ public class ChatScreenActivity extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
                                     imageUrl[0] = uri.toString();
                                     System.out.println("Photo added in Storage");
+                                    imagePreviewSend.setEnabled(true);
+                                    imagePreviewSend.getBackground().setAlpha(255);
+                                    progressBar.setVisibility(View.INVISIBLE);
                                 }
                             });
                         }
@@ -374,6 +423,16 @@ public class ChatScreenActivity extends AppCompatActivity {
                     });
                     }
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(opp == 0) {
+            Intent intent1 = new Intent(ChatScreenActivity.this, MainActivity.class);
+            startActivity(intent1);
+            finish();
         }
     }
 }
