@@ -43,8 +43,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//After sending a message, when we come back to adapter, the userList becomes empty...
-
 public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     ArrayList<datamodel> dataholder;
     Context context;

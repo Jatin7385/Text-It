@@ -59,8 +59,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-//ADDED TIME HERE
-//Add an imageUrl part in the firebase database for Chats as well
 public class ChatScreenActivity extends AppCompatActivity {
     private Button back;
     private FloatingActionButton send, imageButton;
@@ -118,15 +116,15 @@ public class ChatScreenActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         //Request for camera runtime permission
-                        if(ContextCompat.checkSelfPermission(ChatScreenActivity.this, Manifest.permission.CAMERA)
-                                != PackageManager.PERMISSION_GRANTED){
-                            ActivityCompat.requestPermissions(ChatScreenActivity.this,new String[]{
+                        if (ContextCompat.checkSelfPermission(ChatScreenActivity.this, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            ActivityCompat.requestPermissions(ChatScreenActivity.this, new String[]{
                                     Manifest.permission.CAMERA
-                            },100);
+                            }, 100);
                         }
 
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent,100);
+                        startActivityForResult(intent, 100);
 
                         alertDialog.dismiss();
                     }
@@ -181,7 +179,7 @@ public class ChatScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 opp = 1;
-                Intent intent1 = new Intent(ChatScreenActivity.this,MainActivity.class);
+                Intent intent1 = new Intent(ChatScreenActivity.this, MainActivity.class);
                 startActivity(intent1);
                 finish();
             }
@@ -262,7 +260,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
         date = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         final int[] flag = {0};
-       DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Time");
+        DatabaseReference reference1 = FirebaseDatabase.getInstance().getReference("Time");
         reference1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -270,22 +268,21 @@ public class ChatScreenActivity extends AppCompatActivity {
                     TimeModel timeModel = snapshot1.getValue(TimeModel.class);
                     if (timeModel.getMyId().equals(myId) && timeModel.getFriendId().equals(friendId)) {
                         flag[0] = 1;
-                        HashMap<String,Object> hashMap = new HashMap();
-                        hashMap.put("date",date);
-                        hashMap.put("time",time);
+                        HashMap<String, Object> hashMap = new HashMap();
+                        hashMap.put("date", date);
+                        hashMap.put("time", time);
                         reference1.child(timeModel.getId()).updateChildren(hashMap);
                     }
 
                 }
-                if(flag[0] == 0)
-                {
+                if (flag[0] == 0) {
                     HashMap<String, Object> hashMap = new HashMap<>();
                     hashMap.put("myId", myId);
                     hashMap.put("friendId", friendId);
                     hashMap.put("time", time);
                     hashMap.put("date", date);
                     String mGroupId = reference1.push().getKey();
-                    hashMap.put("id",mGroupId);
+                    hashMap.put("id", mGroupId);
                     reference1.child(mGroupId).setValue(hashMap);
 
                 }
@@ -304,8 +301,8 @@ public class ChatScreenActivity extends AppCompatActivity {
         hashMap.put("receiver", friendId);
         hashMap.put("message", message);
         hashMap.put("imageUrl", uri);
-        hashMap.put("time",time);
-        hashMap.put("date",date);
+        hashMap.put("time", time);
+        hashMap.put("date", date);
         databaseReference.child("Chats").push().setValue(hashMap);
     }
 
@@ -325,8 +322,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK && requestCode == CAPTURE_IMAGE)
-        {
+        if (resultCode == RESULT_OK && requestCode == CAPTURE_IMAGE) {
             final String[] imageUrl = new String[1];
             Button imagePreviewSend;
             ImageView previewImage;
@@ -358,8 +354,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                     sendMessage(myId, friendId, message, imageUrl[0]);
                 }
             });
-        }
-        else if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE) {
+        } else if (resultCode == RESULT_OK && requestCode == SELECT_PICTURE) {
             final String[] imageUrl = new String[1];
             Button imagePreviewSend;
             ImageView previewImage;
@@ -380,7 +375,7 @@ public class ChatScreenActivity extends AppCompatActivity {
             if (null != selectedImageUri) {
                 // update the preview image in the layout
                 progressBar.setVisibility(View.VISIBLE);
-                Toast.makeText(ChatScreenActivity.this,"This may take a few seconds",Toast.LENGTH_LONG).show();
+                Toast.makeText(ChatScreenActivity.this, "This may take a few seconds", Toast.LENGTH_LONG).show();
                 imagePreviewSend.setEnabled(false);
                 imagePreviewSend.getBackground().setAlpha(50);
                 System.out.println(selectedImageUri.toString());
@@ -421,18 +416,18 @@ public class ChatScreenActivity extends AppCompatActivity {
                             sendMessage(myId, friendId, message, imageUrl[0]);
                         }
                     });
-                    }
+                }
             }
         }
     }
 
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(opp == 0) {
-            Intent intent1 = new Intent(ChatScreenActivity.this, MainActivity.class);
-            startActivity(intent1);
-            finish();
-        }
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent1 = new Intent(ChatScreenActivity.this, MainActivity.class);
+        startActivity(intent1);
+        finish();
     }
+
 }
