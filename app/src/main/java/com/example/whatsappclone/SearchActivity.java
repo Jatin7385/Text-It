@@ -37,7 +37,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
 
         recyclerView = findViewById(R.id.search_recView);
         recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));

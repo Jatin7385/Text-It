@@ -241,8 +241,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.myviewhold
     }
 
     public void updateReceiptsList(List<UsersModel> newlist) {
-        userList.clear();
-        userList = newlist;
-        this.notifyDataSetChanged();
+        if(newlist.size() == userList.size()) {
+            userList.clear();
+            userList = newlist;
+            this.notifyDataSetChanged();
+        }
     }
 }

@@ -63,7 +63,7 @@ public class ProfileSetUpActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_profile_set_up);
 
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 

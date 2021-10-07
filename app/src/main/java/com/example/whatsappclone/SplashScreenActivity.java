@@ -2,12 +2,15 @@ package com.example.whatsappclone;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -18,8 +21,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
-        getSupportActionBar().hide();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {loginStatus = 1;}

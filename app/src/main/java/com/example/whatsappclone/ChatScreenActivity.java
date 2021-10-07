@@ -84,7 +84,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.in_chat_screen);
 
-        getSupportActionBar().hide();
+//        getSupportActionBar().hide();
 
         opp = 0;
 
