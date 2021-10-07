@@ -26,11 +26,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="131dp"
+            android:layout_marginStart="161dp"
             android:layout_marginLeft="300dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginRight="10dp"
-            android:layout_marginEnd="60dp"
             android:layout_toEndOf="@+id/title"
             android:background="@drawable/ic_baseline_search_24"
             android:backgroundTint="#232d36"
@@ -45,27 +45,16 @@
         android:layout_marginTop="80dp"
         android:background="#232d36">
 
-        <LinearLayout
+        <com.google.android.material.tabs.TabLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/tablayout"
+            android:background="#232d36"
+            app:tabTextColor="@color/white"
+            app:tabSelectedTextColor="#00FF00"
+            app:tabIndicatorColor="#00FF00">
 
-            <Button
-                android:id="@+id/chats_button"
-                android:layout_width="222dp"
-                android:layout_height="match_parent"
-                android:backgroundTint="#232d36"
-                android:text="CHATS"
-                android:textColor="#939ca3" />
-
-            <Button
-                android:id="@+id/profile_button"
-                android:layout_width="196dp"
-                android:layout_height="match_parent"
-                android:backgroundTint="#232d36"
-                android:text="PROFILE"
-                android:textColor="#939ca3" />
-        </LinearLayout>
+        </com.google.android.material.tabs.TabLayout>
 
 
     </RelativeLayout>

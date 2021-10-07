@@ -10,10 +10,16 @@
         android:id="@+id/include"
         layout="@layout/toolbar" />
 
-    <FrameLayout
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/include" />
+
+    <!--<FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/include"/>
+        android:layout_below="@+id/include" />-->
 
 </RelativeLayout>

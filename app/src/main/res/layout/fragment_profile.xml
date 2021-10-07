@@ -10,12 +10,12 @@
         android:id="@+id/profile_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:gravity="center_horizontal"
+        android:text="PROFILE PAGE"
         android:textColor="#00FF00"
         android:textSize="40dp"
-        android:text="PROFILE PAGE"
-        android:layout_marginTop="40dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="323dp"
