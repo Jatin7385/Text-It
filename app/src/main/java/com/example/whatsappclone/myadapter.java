@@ -62,7 +62,6 @@ public class myadapter extends RecyclerView.Adapter<myadapter.myviewholder>{
     public myadapter(List<UsersModel> userList) {
 
         this.userList = userList;
-        //listsize = userList.size();
         sortUserList(userList);
     }
 

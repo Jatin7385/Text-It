@@ -81,12 +81,11 @@ public class ChatsFragment extends Fragment {
                     {
                         for(TimeModel timeModel : timeModelList)
                         {
-                            if(users.getId().equals(timeModel.getFriendId()) && timeModel.getMyId().equals(myId))
+                            if(users.getId().equals(timeModel.getFriendId()) && timeModel.getMyId().equals(myId) || users.getId().equals(timeModel.getFriendId()) && timeModel.getMyId().equals(friendId))
                             {
                                 userList.add(users);
                             }
                         }
-//                        userList.add(users);
                     }
                 }
 

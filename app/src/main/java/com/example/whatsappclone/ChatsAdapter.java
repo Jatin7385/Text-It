@@ -69,7 +69,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
         }
         else
         {
-            View view = LayoutInflater.from(context).inflate(R.layout.chat_sending_image,parent,false);
+            View view = LayoutInflater.from(context).inflate(R.layout.chat_recieving_image,parent,false);
             viewtype = 3;
             return new MyViewHolder(view);
         }
@@ -156,6 +156,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.MyViewHolder
         }
         else if(chatsList.get(position).getReceiver().equals(user.getUid()) && chatsList.get(position).getImageUrl().equals("null")){return MESSAGE_LEFT_NOIMAGE;}
         else if(chatsList.get(position).getSender().equals(user.getUid()) && !chatsList.get(position).getImageUrl().equals("null")){return MESSAGE_RIGHT_IMAGE;}
-        else{return MESSAGE_LEFT_IMAGE;}
+        else if(chatsList.get(position).getReceiver().equals(user.getUid()) && !chatsList.get(position).getImageUrl().equals("null")){return MESSAGE_LEFT_IMAGE;}
+
+        return MESSAGE_RIGHT_NOIMAGE;
     }
 }

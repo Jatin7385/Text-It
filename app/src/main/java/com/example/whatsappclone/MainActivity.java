@@ -23,7 +23,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button chats,status,calls, search;
+    Button search;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -63,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        //prepareViewPager(viewPager,arrayList);
-
-        //tabLayout.setupWithViewPager(viewPager);
-
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,42 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//
-//        chats.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectedFragment[0] = new ChatsFragment();
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        selectedFragment[0]).commit();
-//            }
-//        });
-//
-//        calls.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectedFragment[0] = new ProfileFragment();
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                        selectedFragment[0]).commit();
-//            }
-//        });
     }
-
-//    private void prepareViewPager(ViewPager viewPager, ArrayList<String> arrayList) {
-//        MainAdapter adapter = new MainAdapter(getSupportFragmentManager());
-//
-//        ChatsFragment fragment = new ChatsFragment();
-//        for(int i=0;i<arrayList.size();i++)
-//        {
-//            Bundle bundle = new Bundle();
-//            bundle.putString("title",arrayList.get(i));
-//            fragment.setArguments(bundle);
-//            adapter.addFragment(fragment,arrayList.get(i));
-//
-//            fragment = new ChatsFragment();
-//        }
-//
-//        viewPager.setAdapter(adapter);
-//    }
 
     private class MainAdapter extends FragmentPagerAdapter {
 
