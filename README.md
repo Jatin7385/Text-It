@@ -1,4 +1,4 @@
-# Text'It
+# Whatsapp Clone
 
 ## Description
 ### This is a simple chat application made using Java, Xml and Firebase.
